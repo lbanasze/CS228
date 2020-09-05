@@ -6,8 +6,10 @@ var ran;
 +
 Leap.loop(controllerOptions, function(frame)
 	{
+		clear();
+
 		console.log(i);
-		i += 1;
+		i+=1;
 
 		//Math.random() * (max - min) + min;
 		ran = Math.random() * 2 - 1;
