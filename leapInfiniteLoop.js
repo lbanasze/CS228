@@ -4,6 +4,8 @@ var x = (window.innerWidth)/2;
 var y = (window.innerHeight)/2;
 var ran;
 var ran2;
+var hand;
+var fingers;
 
 Leap.loop(controllerOptions, function(frame)
 	{
@@ -16,8 +18,14 @@ Leap.loop(controllerOptions, function(frame)
 		//ran2 = Math.floor(Math.random() * 2 - 1);
 
 		//circle((x+ran), (y+ran2), 100);
-		
-		console.log(frame.hands);
+	
+		if(frame.hands.length == 1)
+		{
+			hand = (frame.hands[0]);
+			fingers = hand.fingers;
+			
+			console.log(fingers);
+		}
 	}
 );
 
