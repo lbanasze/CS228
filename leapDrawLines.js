@@ -1,42 +1,69 @@
 var controllerOptions = {};
 var i = 0, x, y, z;
 var ran, ran2;
-var hand, fingers, finger;
+var hand, fingers, finger, bones, bone;
+var rawXMax = -1;
+var rawYMax = -1;
+var rawXMin = 1;
+var rawYMin = 1;
 
 Leap.loop(controllerOptions, function(frame)
-	{ 
+	{
 		clear();
 		HandleFrame(frame);
 	}
 );
 
 function HandleFrame(frame){
-	clear();
 
         if(frame.hands.length == 1)
         	{
 			hand = frame.hands[0];
-			HandleHand(hand)
+			HandleHand(hand);
                 }
 
 }
 
-function HandleHand(hand){
-        fingers = hand.fingers;
-
-        for (i = 0; i < fingers.length; i++) {
-		HandleFinger(fingers[i]); 
-      	}
+function HandleHand(hand)
+{
+	fingers = hand.fingers;
+      	for (i = 0; i < 5; i++) {
+		HandleFinger(fingers[i]);
+    	}
 }
 
 function HandleFinger(finger){	
-		x = finger.tipPosition[0];
-		y = window.innerHeight - finger.tipPosition[1];
-		z = finger.tipPosition[2];
 
-		console.log(1);
+	finger.bones.forEach(HandleBone);
+}
 
-		x = (((x + 310) * 1366) / 600); 
-		y = (((y - 67) * 355) / 421);
-		circle(x, y, 50);
+function HandleBone(bone){
+	x = bone.nextJoint[0];
+	y = window.innerHeight - bone.nextJoint[1];
+	z = bone.nextJoint[2];
+
+	updateRange(x, y);
+
+	x = (x - rawXMin) * (window.innerWidth / (rawXMax - rawXMin));
+	y = (y - rawYMin) * (window.innerHeight / (rawYMax - rawYMin));
+	circle(x, y, 50);
+}
+
+function updateRange(x, y){
+	if (x < rawXMin){
+		rawXMin = x;
+	}
+
+	if (y < rawYMin){
+		rawYMin = y;
+	}
+
+	if (x > rawXMax){
+		rawXMax = x;
+	}
+
+	if (y > rawYMax){
+		rawYMax = y;
+	}
+
 }
