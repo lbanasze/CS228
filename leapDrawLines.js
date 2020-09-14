@@ -27,8 +27,16 @@ function HandleFrame(frame){
 function HandleHand(hand)
 {
 	fingers = hand.fingers;
-      	for (i = 0; i < 5; i++) {
-		HandleFinger(fingers[i]);
+
+      	for (i = 0; i < 4; i++) {
+		for (j = 0; j < fingers.length; j++)
+		{	if ((fingers[j] == 0) && (i == 3)){
+				console.log("nothing!")
+			}
+			else{
+				HandleBone(fingers[j].bones[i]);
+			}
+		}
     	}
 }
 
