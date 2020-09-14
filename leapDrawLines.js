@@ -38,18 +38,19 @@ function HandleFinger(finger){
 }
 
 function HandleBone(bone){
-	x = bone.nextJoint[0];
-	y = window.innerHeight - bone.nextJoint[1];
+	x1 = bone.prevJoint[0];
+	x2 = bone.nextJoint[0];
+	y1 = window.innerHeight - bone.prevJoint[1];
+	y2 = window.innerHeight - bone.nextJoint[1];
 	z = bone.nextJoint[2];
 
-	updateRange(x, y);
+	[x1, y1] = TransformCoordinates(x1, y1);
+	[x2, y2] = TransformCoordinates(x2, y2);
 
-	x = (x - rawXMin) * (window.innerWidth / (rawXMax - rawXMin));
-	y = (y - rawYMin) * (window.innerHeight / (rawYMax - rawYMin));
-	circle(x, y, 50);
+	line(x1, y1, x2, y2);
 }
 
-function updateRange(x, y){
+function TransformCoordinates(x, y){
 	if (x < rawXMin){
 		rawXMin = x;
 	}
@@ -65,5 +66,10 @@ function updateRange(x, y){
 	if (y > rawYMax){
 		rawYMax = y;
 	}
+
+	x = (x - rawXMin) * (window.innerWidth / (rawXMax - rawXMin));
+	y = (y - rawYMin) * (window.innerHeight / (rawYMax - rawYMin));
+
+	return [x, y];
 
 }
