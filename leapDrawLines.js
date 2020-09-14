@@ -47,6 +47,8 @@ function HandleBone(bone){
 	[x1, y1] = TransformCoordinates(x1, y1);
 	[x2, y2] = TransformCoordinates(x2, y2);
 
+	strokeWeight(8 - bone.type);
+	stroke(255 - (bone.type + 1) * 40); 
 	line(x1, y1, x2, y2);
 }
 
