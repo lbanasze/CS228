@@ -6,11 +6,15 @@ var rawXMax = -1;
 var rawYMax = -1;
 var rawXMin = 1;
 var rawYMin = 1;
+var previousNumHands = 0;
+var currentNumHands = 0;
 
 Leap.loop(controllerOptions, function(frame)
-	{
+	{ 	
+		currentNumHands = frame.hands.length;
 		clear();
 		HandleFrame(frame);
+		previousNumHands = currentNumHands;
 	}
 );
 
