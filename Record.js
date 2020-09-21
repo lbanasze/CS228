@@ -14,6 +14,9 @@ Leap.loop(controllerOptions, function(frame)
 		currentNumHands = frame.hands.length;
 		clear();
 		HandleFrame(frame);
+		if (previousNumHands == 2 && currentNumHands == 1){
+			RecordData();
+		}
 		previousNumHands = currentNumHands;
 	}
 );
@@ -93,4 +96,8 @@ function TransformCoordinates(x, y){
 
 	return [x, y];
 
+}
+
+function RecordData(){
+	background(0);
 }
