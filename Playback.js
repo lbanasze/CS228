@@ -1,4 +1,6 @@
 var xStart, yStart, zStart, xEnd, yEnd, zEnd;
+var frameIndex = 0;
+var timer = 0;
 var oneFrameOfData = nj.array([[[ 800.73071, 234.40124, 237.94318, 800.73071, 234.40124, 237.94318],
         [ 800.73071, 234.40124, 237.94318, 596.76165,  220.0619, 203.48499],
         [ 596.76165,  220.0619, 203.48499, 539.96081, 216.92902, 162.26014],
@@ -42,23 +44,42 @@ var anotherFrameOfData = nj.array([[[ 490.33015, 275.39409, 154.40428, 490.33015
 
 function draw(){
 	clear();
+	frameIndex += 1; 
+	if (frameIndex == 100){
+		frameIndex = 0;
+		
+		if (timer == 0){
+			timer = 1;
+		}
+
+		else{
+			timer = 0;
+		}
+	}
+
 	for(i = 0; i < oneFrameOfData.shape[0]; i++){
 		for(j = 0; j < oneFrameOfData.shape[1]; j++){
-			xStart = oneFrameOfData.get(i, j, 0);
-			yStart = oneFrameOfData.get(i, j, 1);
-			zStart = oneFrameOfData.get(i, j, 2);
-			xEnd = oneFrameOfData.get(i, j, 3);
-			yEnd = oneFrameOfData.get(i, j, 4);
-			zEnd = oneFrameOfData.get(i, j, 5);
-			line(xStart, yStart, xEnd, yEnd);
+			console.log(timer);
+			if (timer == 0){
+				xStart = oneFrameOfData.get(i, j, 0);
+				yStart = oneFrameOfData.get(i, j, 1);
+				zStart = oneFrameOfData.get(i, j, 2);
+				xEnd = oneFrameOfData.get(i, j, 3);
+				yEnd = oneFrameOfData.get(i, j, 4);
+				zEnd = oneFrameOfData.get(i, j, 5);
+				line(xStart, yStart, xEnd, yEnd);
+			}
 			
-			xStart2 = anotherFrameOfData.get(i, j, 0);
-			yStart2 = anotherFrameOfData.get(i, j, 1);
-			zStart2 = anotherFrameOfData.get(i, j, 2);
-			xEnd2 = anotherFrameOfData.get(i, j, 3);
-			yEnd2 = anotherFrameOfData.get(i, j, 4);
-			zEnd2 = anotherFrameOfData.get(i, j, 5);
-			line(xStart2, yStart2, xEnd2, yEnd2);
+			else if (timer == 1){
+				xStart = anotherFrameOfData.get(i, j, 0);
+				yStart = anotherFrameOfData.get(i, j, 1);
+				zStart = anotherFrameOfData.get(i, j, 2);
+				xEnd = anotherFrameOfData.get(i, j, 3);
+				yEnd = anotherFrameOfData.get(i, j, 4);
+				zEnd = anotherFrameOfData.get(i, j, 5);
+				line(xStart, yStart, xEnd, yEnd);
+			}
+
 		}
 	}
 }
