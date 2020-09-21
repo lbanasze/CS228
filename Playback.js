@@ -1,85 +1,25 @@
-var controllerOptions = {};
-var i = 0, x, y, z;
-var ran, ran2;
-var hand, fingers, finger, bones, bone;
-var rawXMax = -1;
-var rawYMax = -1;
-var rawXMin = 1;
-var rawYMin = 1;
+var oneFrameOfData = nj.array([[[ 800.73071, 234.40124, 237.94318, 800.73071, 234.40124, 237.94318],
+        [ 800.73071, 234.40124, 237.94318, 596.76165,  220.0619, 203.48499],
+        [ 596.76165,  220.0619, 203.48499, 539.96081, 216.92902, 162.26014],
+        [ 539.96081, 216.92902, 162.26014, 508.31121,  215.3464, 133.34151]],
+       [[ 824.86119, 212.94262, 229.06503, 639.76249, 205.06189, 147.19903],
+        [ 639.76249, 205.06189, 147.19903, 570.38643, 196.79298,  95.97059],
+        [ 570.38643, 196.79298,  95.97059,  533.1273, 197.88911,  66.39126],
+        [  533.1273, 197.88911,  66.39126, 509.12009,  202.0808,  46.03205]],
+       [[ 878.10069, 209.98392, 221.30223, 747.41924, 201.67893, 138.55152],
+        [ 747.41924, 201.67893, 138.55152, 674.59851, 194.97396,  80.05318],
+        [ 674.59851, 194.97396,  80.05318, 628.65378, 196.92859,  45.47544],
+        [ 628.65378, 196.92859,  45.47544, 597.72937, 201.37285,  23.38085]],
+       [[ 935.66577, 209.95033, 214.58611, 865.21125, 202.03103, 136.81729],
+        [ 865.21125, 202.03103, 136.81729, 789.92942, 199.45804,  82.70116],
+        [ 789.92942, 199.45804,  82.70116, 740.51711,  201.3318,  49.41529],
+        [ 740.51711,  201.3318,  49.41529, 706.13224, 204.43606,  27.38245]],
+       [[ 996.47104, 216.77971, 209.64103,  972.8656, 206.99786, 136.59567],
+        [  972.8656, 206.99786, 136.59567, 928.20795, 203.38223,  92.84692],
+        [ 928.20795, 203.38223,  92.84692, 899.18221, 203.80277,  68.80345],
+        [ 899.18221, 203.80277,  68.80345, 871.03731, 205.77979,  47.97399]]]);
 
-Leap.loop(controllerOptions, function(frame)
-	{
-		clear();
-		HandleFrame(frame);
-	}
-);
-
-function HandleFrame(frame){
-
-        if(frame.hands.length == 1)
-        	{
-			hand = frame.hands[0];
-			HandleHand(hand);
-                }
-
-}
-
-function HandleHand(hand)
-{
-	fingers = hand.fingers;
-
-      	for (i = 0; i < 4; i++) {
-		for (j = 0; j < fingers.length; j++)
-		{	if ((fingers[j] == 0) && (i == 3)){
-				console.log("nothing!")
-			}
-			else{
-				HandleBone(fingers[j].bones[i]);
-			}
-		}
-    	}
-}
-
-function HandleFinger(finger){	
-
-	finger.bones.forEach(HandleBone);
-}
-
-function HandleBone(bone){
-	x1 = bone.prevJoint[0];
-	x2 = bone.nextJoint[0];
-	y1 = window.innerHeight - bone.prevJoint[1];
-	y2 = window.innerHeight - bone.nextJoint[1];
-	z = bone.nextJoint[2];
-
-	[x1, y1] = TransformCoordinates(x1, y1);
-	[x2, y2] = TransformCoordinates(x2, y2);
-
-	strokeWeight(8 - bone.type);
-	stroke(255 - (bone.type + 1) * 40); 
-	line(x1, y1, x2, y2);
-}
-
-function TransformCoordinates(x, y){
-	if (x < rawXMin){
-		rawXMin = x;
-	}
-
-	if (y < rawYMin){
-		rawYMin = y;
-	}
-
-	if (x > rawXMax){
-		rawXMax = x;
-	}
-
-	if (y > rawYMax){
-		rawYMax = y;
-	}
-
-	x = (x - rawXMin) * (window.innerWidth / (rawXMax - rawXMin));
-	y = (y - rawYMin) * (window.innerHeight / (rawYMax - rawYMin));
-
-	return [x, y];
-
+function draw(){
+	clear();
+	console.log(oneFrameOfData.toString());
 }
