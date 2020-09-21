@@ -10,7 +10,7 @@ var rawYMin = 1;
 var rawZMin = 1;
 var previousNumHands = 0;
 var currentNumHands = 0;
-var oneFrameOfData = nj.zeros([5]);
+var oneFrameOfData = nj.zeros([5,4]);
 
 Leap.loop(controllerOptions, function(frame)
 	{ 	
@@ -64,7 +64,7 @@ function HandleBone(bone, fingerIndex){
 	[x1, y1, z1] = TransformCoordinates(x1, y1, z1);
 	[x2, y2, z2] = TransformCoordinates(x2, y2, z2);
 
-	oneFrameOfData.set(fingerIndex, (x1+x2+y1+y2+z1+z2));
+	oneFrameOfData.set(fingerIndex, bone.type, (x1+x2+y1+y2+z1+z2));
 
 	strokeWeight(8 - (bone.type * 1.5));
 	if (currentNumHands == 1){
