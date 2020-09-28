@@ -153,7 +153,8 @@ var numSamples;
 var numFeatures;
 [numSamples, numFeatures] = irisData.shape;
 numFeatures -= 1;
-var currentFeatures, currentLabel;
+var currentFeatures, currentLabel, predictedLabel;
+var testingSampleIndex = 1;
 var trainingCompleted = false;
 
 const knnClassifier = ml5.KNNClassifier();
@@ -168,7 +169,7 @@ function draw(){
 }
 
 function Train(){
-	for(i = 0; i < numSamples ; i+=2){
+	for(i = 0; i < numSamples; i+=2){
 		currentFeatures = irisData.pick(i).slice([4]);
 		currentLabel = irisData.pick(i).get(-1);
 		knnClassifier.addExample(currentFeatures.tolist(), currentLabel);
@@ -176,6 +177,16 @@ function Train(){
 }
 
 function Test(){
-//	console.log("test");
+	currentFeatures = irisData.pick(testingSampleIndex).slice([4]);
+	currentLabel = irisData.pick(testingSampleIndex).get(-1);
+	predictedLabel = knnClassifier.classify(currentFeatures.tolist(), GotResults);
+	console.log(currentLabel);
 }
 
+function GotResults(err, result){
+	console.log(result.label);
+	testingSampleIndex += 2;
+	if (testingSampleIndex > numSamples){
+		testingSampleIndex = 1;
+	}
+}
