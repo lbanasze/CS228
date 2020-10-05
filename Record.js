@@ -58,6 +58,15 @@ function HandleBone(bone, fingerIndex, InteractionBox){
 	normalizedPrevJoint = InteractionBox.normalizePoint(bone.prevJoint, true);
 	normalizedNextJoint = InteractionBox.normalizePoint(bone.nextJoint, true);
 
+	oneFrameOfData.set(fingerIndex, bone.type, 0, normalizedPrevJoint[0]);
+	oneFrameOfData.set(fingerIndex, bone.type, 1, 1-normalizedPrevJoint[1]);
+	oneFrameOfData.set(fingerIndex, bone.type, 2, normalizedPrevJoint[2]);
+	oneFrameOfData.set(fingerIndex, bone.type, 3, normalizedNextJoint[0]);
+	oneFrameOfData.set(fingerIndex, bone.type, 4, 1-normalizedNextJoint[1]);
+	oneFrameOfData.set(fingerIndex, bone.type, 5, normalizedNextJoint[2]);
+
+	console.log(oneFrameOfData.toString());
+
 	x1 = window.innerWidth * normalizedPrevJoint[0];
 	x2 = window.innerWidth * normalizedNextJoint[0];
 	y1 = window.innerHeight * (1 - normalizedPrevJoint[1]);
@@ -65,13 +74,6 @@ function HandleBone(bone, fingerIndex, InteractionBox){
 	z1 = normalizedPrevJoint[2];
 	z2 = normalizedNextJoint[2];
 
-	oneFrameOfData.set(fingerIndex, bone.type, 0, x1);
-	oneFrameOfData.set(fingerIndex, bone.type, 1, y1);
-	oneFrameOfData.set(fingerIndex, bone.type, 2, z1);
-	oneFrameOfData.set(fingerIndex, bone.type, 3, x2);
-	oneFrameOfData.set(fingerIndex, bone.type, 4, y2);
-	oneFrameOfData.set(fingerIndex, bone.type, 5, z2);
-	
 	strokeWeight(8 - (bone.type * 1.5));
 	if (currentNumHands == 1){
 		stroke(0, (255 - (bone.type + 1.5) * 40), 0); 
