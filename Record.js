@@ -21,9 +21,7 @@ Leap.loop(controllerOptions, function(frame)
 		currentNumHands = frame.hands.length;
 		clear();
 		HandleFrame(frame);
-		if (previousNumHands == 2 && currentNumHands == 1){
-			RecordData();
-		}
+		RecordData();
 		previousNumHands = currentNumHands;
 	}
 
@@ -90,6 +88,15 @@ function HandleBone(bone, fingerIndex, InteractionBox){
 }
 
 function RecordData(){
-	console.log(framesOfData.pick(null, null, null, 1).toString());
-	background(0);
+	currentSample ++;
+	if (currentNumHands == 2){
+		if( currentSample == numSamples){
+			currentSample = 0;
+		}
+	}
+	if (currentNumHands == 2 && previousNumHands == 1){
+		console.log(framesOfData.toString());
+
+	}
 }
+
