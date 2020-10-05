@@ -228,7 +228,7 @@ function DrawCircles(){
 		}
 
 		strokeWeight(2);
-		//console.log(predictedClassLabels.toString());
+		console.log(predictedClassLabels.toString());
 		circle(x, y, 10);
 	}
 }
