@@ -63,10 +63,10 @@ function draw(){
 			console.log(timer);
 			if (timer == 0){
 				xStart = window.innerWidth * oneFrameOfData.get(i, j, 0);
-				yStart = window.innerHeight * oneFrameOfData.get(i, j, 1);
+				yStart = window.innerHeight * (1- oneFrameOfData.get(i, j, 1));
 				zStart = oneFrameOfData.get(i, j, 2);
 				xEnd = window.innerWidth * oneFrameOfData.get(i, j, 3);
-				yEnd = window.innerHeight * oneFrameOfData.get(i, j, 4);
+				yEnd = window.innerHeight *(1- oneFrameOfData.get(i, j, 4));
 				zEnd = oneFrameOfData.get(i, j, 5);
 				line(xStart, yStart, xEnd, yEnd);
 			}
@@ -76,7 +76,7 @@ function draw(){
 				yStart = window.innerHeight * anotherFrameOfData.get(i, j, 1);
 				zStart = anotherFrameOfData.get(i, j, 2);
 				xEnd = window.innerWidth * anotherFrameOfData.get(i, j, 3);
-				yEnd = window.innerHeight * anotherFrameOfData.get(i, j, 4);
+				yEnd = window.innerHeight *(1- anotherFrameOfData.get(i, j, 4));
 				zEnd = anotherFrameOfData.get(i, j, 5);
 				line(xStart, yStart, xEnd, yEnd);
 			}
