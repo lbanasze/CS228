@@ -1,14 +1,6 @@
-
 var controllerOptions = {};
-var i = 0, x, y, z;
-var ran, ran2;
+var x1, y1, z1, x2, y2, z2;
 var hand, fingers, finger, bones, bone;
-var rawXMax = -1;
-var rawYMax = -1;
-var rawZMax = -1;
-var rawXMin = 1;
-var rawYMin = 1;
-var rawZMin = 1;
 var previousNumHands = 0;
 var currentNumHands = 0;
 var framesOfData = nj.zeros([5,4,6,2]);
