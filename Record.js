@@ -1,3 +1,4 @@
+
 var controllerOptions = {};
 var i = 0, x, y, z;
 var ran, ran2;
@@ -44,9 +45,11 @@ function HandleHand(hand, InteractionBox)
 {
 	fingers = hand.fingers;
 
-      	for (i = 0; i < 4; i++) {
+      	for (i = 3; i >= 0;  i--) {
 		for (j = 0; j < fingers.length; j++){
-			HandleBone(fingers[j].bones[i], fingers[j].type, InteractionBox);
+			if(!(fingers[j].type == 0 && i ==3)){
+				HandleBone(fingers[j].bones[i], fingers[j].type, InteractionBox);
+			}
 		}
     	}
 }
@@ -74,9 +77,9 @@ function HandleBone(bone, fingerIndex, InteractionBox){
 	z1 = normalizedPrevJoint[2];
 	z2 = normalizedNextJoint[2];
 
-	strokeWeight(8 - (bone.type * 1.5));
+	strokeWeight(30 - (bone.type * 4.5));
 	if (currentNumHands == 1){
-		stroke(0, (255 - (bone.type + 1.5) * 40), 0); 
+		stroke(0, (255 - (bone.type + 1.5) * 40), 0, (200 + (10 * (1+bone.type)))); 
 	}
 
 	else if (currentNumHands == 2){
