@@ -37,10 +37,12 @@ function Test(){
 
 function GotResults(err, result){
 	testingSampleIndex += 1; 
+	
+	console.log(testingSampleIndex, parseInt(result.label));
+
 	if (testingSampleIndex == numSamples){
 		testingSampleIndex = 0;
 	}
 
-	console.log(parseInt(result.label));
 }
 

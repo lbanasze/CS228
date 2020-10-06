@@ -3,10 +3,13 @@ var x1, y1, z1, x2, y2, z2;
 var hand, fingers, finger, bones, bone;
 var previousNumHands = 0;
 var currentNumHands = 0;
-var framesOfData = nj.zeros([5,4,6,2]);
-var normalizedPrevJoint, normalizedNextJoint;
 var numSamples = 100;
+var framesOfData = nj.zeros([5,4,6,numSamples]);
+var normalizedPrevJoint, normalizedNextJoint;
 var currentSample = 0;
+var arrayDone = false;
+
+nj.config.printThreshold = 1000;
 
 Leap.loop(controllerOptions, function(frame)
 	{ 	
@@ -84,7 +87,10 @@ function RecordData(){
 //	if (currentNumHands == 2){
 		if( currentSample == numSamples){
 			currentSample = 0;
-			console.log(framesOfData.toString());
+			if (!arrayDone){
+				console.log(framesOfData.toString());
+				arrayDone = true;
+			}
 		}
 //	}
 
