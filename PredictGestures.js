@@ -1,6 +1,6 @@
 var trainingCompleted = false;
 var features;
-var numSamples = 1;
+var numSamples = 100;
 var predictedLabel;
 var testingSampleIndex = 0;
 
@@ -12,15 +12,18 @@ function draw(){
 		Train();
 		trainingCompleted = true;
 	}
+	
 	Test();
 }
 
 function Train(){
-	//console.log(train0.toString());
-	for (i = 0; i < train0.shape[3]; i ++){
-		features = train0.pick(null, null, null, i);
+	for (i = 0; i < train2.shape[3]; i ++){
+		features = train2.pick(null, null, null, i);
 		features = features.reshape(1, 120);
-		knnClassifier.addExample(features.tolist(), 0);
+		knnClassifier.addExample(features.tolist(), 2);
+		features = train3.pick(null,null,null, i);
+		features = features.reshape(1, 120);
+		knnClassifier.addExample(features.tolist(), 3);
 	}
 }
 

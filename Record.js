@@ -5,7 +5,7 @@ var previousNumHands = 0;
 var currentNumHands = 0;
 var framesOfData = nj.zeros([5,4,6,2]);
 var normalizedPrevJoint, normalizedNextJoint;
-var numSamples = 2;
+var numSamples = 100;
 var currentSample = 0;
 
 Leap.loop(controllerOptions, function(frame)
@@ -81,14 +81,12 @@ function HandleBone(bone, fingerIndex, InteractionBox){
 
 function RecordData(){
 	currentSample ++;
-	if (currentNumHands == 2){
+//	if (currentNumHands == 2){
 		if( currentSample == numSamples){
 			currentSample = 0;
+			console.log(framesOfData.toString());
 		}
-	}
-	if (currentNumHands == 2 && previousNumHands == 1){
-		console.log(framesOfData.toString());
+//	}
 
-	}
 }
 
