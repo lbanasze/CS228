@@ -17,6 +17,9 @@ function HandleFrame(frame){
         	{
 			hand = frame.hands[0];
 			HandleHand(hand, InteractionBox);
+			CenterXData();
+			CenterYData();
+			CenterZData();
 			Test();
                 }
 
@@ -74,6 +77,72 @@ function Train(){
 		features = features.reshape(1, 120);
 		knnClassifier.addExample(features.tolist(), 3);
 	}
+}
+
+function CenterXData(){
+	var xValues = oneFrameOfData.slice([], [], [0,6,3]);
+	var currentMean = xValues.mean();
+	var horizontalShift = 0.5 - currentMean;
+
+	var currentX;
+	var shiftedX;
+	for(i = 0; i < 5; i++){
+		for(j = 0; j < 4; j++){
+			currentX = oneFrameOfData.get(i, j, 0);
+			shiftedX = currentX + horizontalShift;
+			oneFrameOfData.set(i, j, 0, shiftedX);
+			
+			currentX = oneFrameOfData.get(i, j, 1);
+			shiftedX = currentX + horizontalShift;
+			oneFrameOfData.set(i, j, 1, shiftedX);
+		}
+	}
+
+	currentMean = xValues.mean();
+}
+
+function CenterYData(){
+	var yValues = oneFrameOfData.slice([], [], [1,6,3]);
+	var currentMean = yValues.mean();
+	var horizontalShift = 0.5 - currentMean;
+
+	var currentY;
+	var shiftedY;
+	for(i = 0; i < 5; i++){
+		for(j = 0; j < 4; j++){
+			currentY = oneFrameOfData.get(i, j, 2);
+			shiftedY = currentY + horizontalShift;
+			oneFrameOfData.set(i, j, 2, shiftedY);
+			
+			currentY = oneFrameOfData.get(i, j, 3);
+			shiftedY = currentY + horizontalShift;
+			oneFrameOfData.set(i, j, 3, shiftedY);
+		}
+	}
+
+	currentMean = yValues.mean();
+}
+
+function CenterZData(){
+	var zValues = oneFrameOfData.slice([], [], [2,6,3]);
+	var currentMean = zValues.mean();
+	var horizontalShift = 0.5 - currentMean;
+
+	var currentZ;
+	var shiftedZ;
+	for(i = 0; i < 5; i++){
+		for(j = 0; j < 4; j++){
+			currentZ = oneFrameOfData.get(i, j, 4);
+			shiftedZ = currentZ + horizontalShift;
+			oneFrameOfData.set(i, j, 4, shiftedZ);
+			
+			currentZ = oneFrameOfData.get(i, j, 4);
+			shiftedZ = currentZ + horizontalShift;
+			oneFrameOfData.set(i, j, 4, shiftedZ);
+		}
+	}
+
+	currentMean = zValues.mean();
 }
 
 function Test(){
