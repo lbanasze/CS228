@@ -1,10 +1,11 @@
 var controllerOptions = {};
 var trainingCompleted = false;
 var features;
-var numSamples = 100;
 var predictedLabel;
-//var testingSampleIndex = 0;
 var oneFrameOfData = nj.zeros([5,4,6]);
+var n = 0;
+var m = 1;
+var d = 3;
 
 const knnClassifier = ml5.KNNClassifier();
 
@@ -76,14 +77,20 @@ function Train(){
 }
 
 function Test(){
-		
-	oneFrameOfData = oneFrameOfData.reshape(1,120);
-	predictedLabel = knnClassifier.classify(oneFrameOfData.tolist(), GotResults);
+
+	for(i = 0; i < oneFrameOfData.shape[2]; i++){	
+		var currentSample = oneFrameOfData.pick(null, null, null, i);
+		currentSample = currentSample.reshape(1,120);
+		predictedLabel = knnClassifier.classify(currentSample.tolist(), GotResults);i
+	}
 }
 
+
 function GotResults(err, result){
-	
-	console.log(parseInt(result.label));
+	n++;
+	c = result.label;
+	m = ((n-1)*m + (c == d))/n
+	console.log(n, m, c);
 }
 
 Leap.loop(controllerOptions, function(frame){
