@@ -23,10 +23,32 @@ function HandleFrame(frame){
 
 }
 
+function IsNewUser(username, list){
+	var users = list.children;
+	var usernameFound = false;
+	for(i = 0; i < users.length; i++){
+		if (users[i].innerHTML == username){
+			usernameFound = true;
+		}
+	}
+
+	return usernameFound == false; 
+}
+
 function SignIn(){
 	username = document.getElementById('username').value;
 	console.log(username);
+	var list = document.getElementById('users');
+	if (IsNewUser(username, list)){
+		var item = document.createElement('li');
+		item.innerHTML = String(username);
+		list.appendChild(item);
+	}
+	console.log(list.innerHTML);
+	return false;
+
 }
+
 
 function HandleHand(hand, InteractionBox)
 {
@@ -214,7 +236,6 @@ function CenterYData(){
 		for(j = 0; j < 4; j++){
 			currentY = oneFrameOfData.get(i, j, 1);
 			shiftedY = currentY + horizontalShift;
-//			console.log(shiftedY);
 			oneFrameOfData.set(i, j, 1, shiftedY);
 			
 			currentY = oneFrameOfData.get(i, j, 4);
@@ -265,7 +286,6 @@ function GotResults(err, result){
 	n++;
 	c = result.label;
 	m = ((n-1)*m + (c == d))/n;
-	console.log(c);
 }
 
 function DrawArrowLeft(){
@@ -328,7 +348,6 @@ function HandTooHigh(){
 function HandTooLow(){
 	var yValues = oneFrameOfData.slice([], [], [1,6,3]);
 	var currentMean = yValues.mean();
-	console.log(currentMean);	
 	if(currentMean <  0.25){
 		return true;
 	}
