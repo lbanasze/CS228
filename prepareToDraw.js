@@ -9,4 +9,6 @@ function setup(){
 	imgUp = loadImage('https://i.imgur.com/5PL1Uiy.jpg');
 	imgRight = loadImage('https://i.imgur.com/MP1KBXW.jpg');
 	imgLeft = loadImage('https://i.imgur.com/lnHuHPl.jpg');
+	img2 = loadImage('https://i.imgur.com/BM0n4JJ.jpg');
+	img3 = loadImage('https://i.imgur.com/DUBtzhY.jpg');
 }

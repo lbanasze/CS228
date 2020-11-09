@@ -7,22 +7,12 @@ var n = 0;
 var m = 1;
 var d = 0;
 var programState = 0;
+var digitToShow = 2;
+var timeSinceLastDigitChange = new Date(); 
 
 const knnClassifier = ml5.KNNClassifier();
 
-function HandleFrame(frame){
-
-	var InteractionBox = frame.interactionBox;
-       
-	if(frame.hands.length >= 1)
-        	{
-			hand = frame.hands[0];
-			HandleHand(hand, InteractionBox);
-	//		Test();
-                }
-
-}
-
+// SIGN IN FUNCTIONS
 function IsNewUser(username, list){
 	var users = list.children;
 	var usernameFound = false;
@@ -69,6 +59,84 @@ function SignIn(){
 }
 
 
+// DRAWING FUNCTIONS
+function HandleFrame(frame){
+
+	var InteractionBox = frame.interactionBox;
+       
+	if(frame.hands.length >= 1)
+        	{
+			hand = frame.hands[0];
+			HandleHand(hand, InteractionBox);
+                }
+
+}
+
+function CenterXData(){
+	var xValues = oneFrameOfData.slice([], [], [0,6,3]);
+	var currentMean = xValues.mean();
+	var horizontalShift = 0.5 - currentMean;
+
+	var currentX;
+	var shiftedX;
+	for(i = 0; i < 5; i++){
+		for(j = 0; j < 4; j++){
+			currentX = oneFrameOfData.get(i, j, 0);
+			shiftedX = currentX + horizontalShift;
+			oneFrameOfData.set(i, j, 0, shiftedX);
+			currentX = oneFrameOfData.get(i, j, 1);
+			shiftedX = currentX + horizontalShift;
+			oneFrameOfData.set(i, j, 3, shiftedX);
+		}
+	}
+
+
+	currentMean = xValues.mean();
+}
+
+function CenterYData(){
+	var yValues = oneFrameOfData.slice([], [], [1,6,3]);
+	var currentMean = yValues.mean();
+	var horizontalShift = 0.5 - currentMean;
+	var currentY;
+	var shiftedY;
+	for(i = 0; i < 5; i++){
+		for(j = 0; j < 4; j++){
+			currentY = oneFrameOfData.get(i, j, 1);
+			shiftedY = currentY + horizontalShift;
+			oneFrameOfData.set(i, j, 1, shiftedY);
+			
+			currentY = oneFrameOfData.get(i, j, 4);
+			shiftedY = currentY + horizontalShift;
+			oneFrameOfData.set(i, j, 4, shiftedY);
+		}
+	}
+
+	currentMean = yValues.mean();
+}
+
+function CenterZData(){
+	var zValues = oneFrameOfData.slice([], [], [2,6,3]);
+	var currentMean = zValues.mean();
+	var horizontalShift = 0.5 - currentMean;
+
+	var currentZ;
+	var shiftedZ;
+	for(i = 0; i < 5; i++){
+		for(j = 0; j < 4; j++){
+			currentZ = oneFrameOfData.get(i, j, 2);
+			shiftedZ = currentZ + horizontalShift;
+			oneFrameOfData.set(i, j, 2, shiftedZ);
+			
+			currentZ = oneFrameOfData.get(i, j, 5);
+			shiftedZ = currentZ + horizontalShift;
+			oneFrameOfData.set(i, j, 5, shiftedZ);
+		}
+	}
+
+	currentMean = zValues.mean();
+}
+
 function HandleHand(hand, InteractionBox)
 {
 	fingers = hand.fingers;
@@ -112,6 +180,7 @@ function HandleBone(bone, fingerIndex, InteractionBox){
 	line(x1, y1, x2, y2);
 }
 
+// TRAIN FUNCTION
 function Train(){
 	for (i = 0; i < train2.shape[3]; i ++){
 		
@@ -139,7 +208,7 @@ function Train(){
 		features = features.reshape(1, 120);
 		knnClassifier.addExample(features.tolist(), 5);
 
-/*		features = train0Bongard.pick(null, null, null, i);
+		features = train0Bongard.pick(null, null, null, i);
 		features = features.reshape(1, 120);
 		knnClassifier.addExample(features.tolist(), 0);
 
@@ -218,95 +287,36 @@ function Train(){
 		features = train9Goldman.pick(null, null, null, i);
 		features = features.reshape(1, 120);
 		knnClassifier.addExample(features.tolist(), 9);
-*/
 	}
 }
 
-
-function CenterXData(){
-	var xValues = oneFrameOfData.slice([], [], [0,6,3]);
-	var currentMean = xValues.mean();
-	var horizontalShift = 0.5 - currentMean;
-
-	var currentX;
-	var shiftedX;
-	for(i = 0; i < 5; i++){
-		for(j = 0; j < 4; j++){
-			currentX = oneFrameOfData.get(i, j, 0);
-			shiftedX = currentX + horizontalShift;
-			oneFrameOfData.set(i, j, 0, shiftedX);
-			currentX = oneFrameOfData.get(i, j, 1);
-			shiftedX = currentX + horizontalShift;
-			oneFrameOfData.set(i, j, 3, shiftedX);
-		}
+function TrainKnn(){
+	if (!trainingCompleted){
+		Train();
+		trainingCompleted = true;
 	}
-
-
-	currentMean = xValues.mean();
 }
 
-function CenterYData(){
-	var yValues = oneFrameOfData.slice([], [], [1,6,3]);
-	var currentMean = yValues.mean();
-	var horizontalShift = 0.5 - currentMean;
-	var currentY;
-	var shiftedY;
-	for(i = 0; i < 5; i++){
-		for(j = 0; j < 4; j++){
-			currentY = oneFrameOfData.get(i, j, 1);
-			shiftedY = currentY + horizontalShift;
-			oneFrameOfData.set(i, j, 1, shiftedY);
-			
-			currentY = oneFrameOfData.get(i, j, 4);
-			shiftedY = currentY + horizontalShift;
-			oneFrameOfData.set(i, j, 4, shiftedY);
-		}
-	}
-
-	currentMean = yValues.mean();
-}
-
-function CenterZData(){
-	var zValues = oneFrameOfData.slice([], [], [2,6,3]);
-	var currentMean = zValues.mean();
-	var horizontalShift = 0.5 - currentMean;
-
-	var currentZ;
-	var shiftedZ;
-	for(i = 0; i < 5; i++){
-		for(j = 0; j < 4; j++){
-			currentZ = oneFrameOfData.get(i, j, 2);
-			shiftedZ = currentZ + horizontalShift;
-			oneFrameOfData.set(i, j, 2, shiftedZ);
-			
-			currentZ = oneFrameOfData.get(i, j, 5);
-			shiftedZ = currentZ + horizontalShift;
-			oneFrameOfData.set(i, j, 5, shiftedZ);
-		}
-	}
-
-	currentMean = zValues.mean();
-}
-
+// TESTING FUNCTIONS
 function Test(){
-
 	for(i = 0; i < oneFrameOfData.shape[2]; i++){	
 		var currentSample = oneFrameOfData.pick(null, null, null, i);
 		CenterXData();
 		CenterYData();
 		CenterZData();
 		currentSample = currentSample.reshape(1,120);
-		predictedLabel = knnClassifier.classify(currentSample.tolist(), GotResults);i
+		predictedLabel = knnClassifier.classify(currentSample.tolist(), GotResults);
 	}
 }
-
 
 function GotResults(err, result){
 	n++;
 	c = result.label;
 	m = ((n-1)*m + (c == d))/n;
+	console.log(c, m);
 }
 
+// DRAWING IMAGES
 function DrawArrowLeft(){
 	image(imgLeft, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2);
 }
@@ -329,6 +339,19 @@ function DrawArrowToward(){
 
 function DrawArrowAway(){
 	image(imgAway, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2);
+}
+
+function DrawImage(){
+	image(img, 0, 0, window.innerWidth/2, window.innerHeight/2);
+}
+
+function DrawLowerRightPanel(){
+	if (digitToShow == 2){
+		image(img2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else{
+		image(img3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
 }
 
 function HandTooFarLeft(){
@@ -417,19 +440,9 @@ function DetermineState(frame){
 	}
 }
 
-function TrainKnn(){
-	if (!trainingCompleted){
-		Train();
-		trainingCompleted = true;
-	}
-}
 
-function DrawImage(){
-	image(img, 0, 0, window.innerWidth/2, window.innerHeight/2);
-}
-
+// HANDLE STATES
 function HandleState0(frame){
-//	TrainKnn();
 	DrawImage();
 }
 
@@ -464,14 +477,47 @@ function HandleState1(frame){
 
 }
 
+function SwitchDigits(){
+	if (digitToShow == 2){
+		digitToShow = 3;
+	}
+	else{
+		digitToShow = 2;
+	}
+	timeSinceLastDigitChange = new Date();
+	n = 0; 
+}
+
+function TimeToSwitchDigits(){
+	var currentTime = new Date(); 
+	var timeElapsedInMilliseconds = currentTime - timeSinceLastDigitChange; 
+	var timeElapsedInSeconds = timeElapsedInMilliseconds/1000;
+	if (timeElapsedInSeconds > 5){
+		return true; 
+	}
+	else{
+		return false; 
+	}
+}
+
+function DetermineWhetherToSwitchDigits(){
+	if(TimeToSwitchDigits()){
+		SwitchDigits();
+	}
+}
+
 function HandleState2(frame){
+	DetermineWhetherToSwitchDigits();
+	DrawLowerRightPanel();
 	HandleFrame(frame);
 }
 
+// LEAP LOOP
 Leap.loop(controllerOptions, function(frame){
 	
 	clear();
 
+	TrainKnn();
 	DetermineState(frame);
 	if (programState == 0){
 		HandleState0(frame);
@@ -482,6 +528,7 @@ Leap.loop(controllerOptions, function(frame){
 	}
 
 	else{
+		Test();
 		HandleState2(frame);
 	}
 
