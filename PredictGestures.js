@@ -5,7 +5,6 @@ var predictedLabel;
 var oneFrameOfData = nj.zeros([5,4,6]);
 var n = 0;
 var m = 1;
-var d = 0;
 var programState = 0;
 var digitToShow = 2;
 var timeSinceLastDigitChange = new Date(); 
@@ -173,6 +172,7 @@ function HandleBone(bone, fingerIndex, InteractionBox){
 	z1 = normalizedPrevJoint[2];
 	z2 = normalizedNextJoint[2];
 
+
 	strokeWeight(30 - (bone.type * 4.5));
 	
 	stroke((255 - (bone.type + 1.5) * 40), (255 - (bone.type + 1.5) * 40), (255 - (bone.type + 1.5) * 40), (200 + (10 * (1+bone.type)))); 
@@ -236,7 +236,7 @@ function Train(){
 		features = features.reshape(1, 120);
 		knnClassifier.addExample(features.tolist(), 3);
 	
-		features = train4Beattie.pick(null, null, null, i);
+/*		features = train4Beattie.pick(null, null, null, i);
 		features = features.reshape(1, 120);
 		knnClassifier.addExample(features.tolist(), 4);
 		
@@ -287,6 +287,7 @@ function Train(){
 		features = train9Goldman.pick(null, null, null, i);
 		features = features.reshape(1, 120);
 		knnClassifier.addExample(features.tolist(), 9);
+	*/
 	}
 }
 
@@ -312,7 +313,7 @@ function Test(){
 function GotResults(err, result){
 	n++;
 	c = result.label;
-	m = ((n-1)*m + (c == d))/n;
+	m = ((n-1)*m + (c == digitToShow))/n;
 	console.log(c, m);
 }
 
@@ -529,6 +530,9 @@ Leap.loop(controllerOptions, function(frame){
 
 	else{
 		Test();
+		strokeWeight(5);
+		stroke(255-255*(m), 255*(m), 0);
+		rect(0, 0, window.innerWidth/2, window.innerHeight/2);
 		HandleState2(frame);
 	}
 
