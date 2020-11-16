@@ -493,7 +493,7 @@ function TimeToSwitchDigits(){
 	var currentTime = new Date(); 
 	var timeElapsedInMilliseconds = currentTime - timeSinceLastDigitChange; 
 	var timeElapsedInSeconds = timeElapsedInMilliseconds/1000;
-	if (timeElapsedInSeconds > 5){
+	if (timeElapsedInSeconds > 5 && m >= 0.8){
 		return true; 
 	}
 	else{
