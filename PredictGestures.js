@@ -6,9 +6,11 @@ var predictedLabel;
 var oneFrameOfData = nj.zeros([5,4,6]);
 var n = 0;
 var m = 1;
+var digitsInARow = 0;
+var lastDigit;
 var programState = 0;
 var digitToShow = 0;
-var timeSinceLastDigitChange = new Date(); 
+var timeSinceLastDigitChange = new Date();
 
 const knnClassifier = ml5.KNNClassifier();
 
@@ -26,7 +28,6 @@ function IsNewUser(username, list){
 }
 
 function CreateNewUser(username, list){
-
 	item = document.createElement('li');
 	item.id = String(username) + "_name";
 	item.innerHTML = String(username);
@@ -315,7 +316,14 @@ function GotResults(err, result){
 	n++;
 	c = result.label;
 	m = ((n-1)*m + (c == digitToShow))/n;
-	console.log(c, m);
+	if (lastDigit != digitToShow){
+		digitsInARow = 0;
+	}
+	if (c == digitToShow){
+		digitsInARow += 1; 
+	}
+	console.log(c, m, digitsInARow);
+	lastDigit = c;
 }
 
 // DRAWING IMAGES
@@ -348,36 +356,76 @@ function DrawImage(){
 }
 
 function DrawLowerRightPanel(){
-	if (digitToShow == 0){
-		image(img0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	if(digitsInARow < 50){
+		if (digitToShow == 0){
+			image(img0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 1){
+			image(img1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}	
+		else if (digitToShow == 2){
+			image(img2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 3){
+			image(img3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 4){
+			image(img4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 5){
+			image(img5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 6){
+			image(img6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 7){
+			image(img7, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 8){
+			image(img8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 9){
+			image(img8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
 	}
-	else if (digitToShow == 1){
-		image(img1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	else{
+		if (digitToShow == 0){
+			image(img0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			let c = get(0, 0, width/2, height);
+			clear();
+			image(c, 0, 0);
+			
+		}
+		else if (digitToShow == 1){
+			image(img1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}	
+		else if (digitToShow == 2){
+			image(img2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 3){
+			image(img3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 4){
+			image(img4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 5){
+			image(img5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 6){
+			image(img6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 7){
+			image(img7, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 8){
+			image(img8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+		else if (digitToShow == 9){
+			image(img8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		}
+
 	}
-	else if (digitToShow == 2){
-		image(img2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 3){
-		image(img3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 4){
-		image(img4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 5){
-		image(img5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 6){
-		image(img6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 7){
-		image(img7, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 8){
-		image(img8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 9){
-		image(img8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
+
 }
 
 function HandTooFarLeft(){
@@ -507,39 +555,40 @@ function SwitchDigits(){
 	if (digitToShow == 0){
 		digitToShow = 1;
 	}
-	if else (digitToShow == 1){
+	else if(digitToShow == 1){
 		digitToShow = 2;
 	}
-	if (digitToShow == 2){
+	else if(digitToShow == 2){
 		digitToShow = 3;
 	}
-	if else (digitToShow == 3){
+	else if(digitToShow == 3){
 		digitToShow = 4;
 	}
-	if (digitToShow == 4){
+	else if(digitToShow == 4){
 		digitToShow = 5;
 	}
-	if else (digitToShow == 5){
+	else if(digitToShow == 5){
 		digitToShow = 6;
 	}
-	if (digitToShow == 6){
+	else if(digitToShow == 6){
 		digitToShow = 7;
 	}
-	if else (digitToShow == 7){
+	else if(digitToShow == 7){
 		digitToShow = 8;
 	}
-	if (digitToShow == 8){
+	else if(digitToShow == 8){
 		digitToShow = 9;
 	}
 	timeSinceLastDigitChange = new Date();
 	n = 0; 
+	digitsInARow = 0; 
 }
 
 function TimeToSwitchDigits(){
 	var currentTime = new Date(); 
 	var timeElapsedInMilliseconds = currentTime - timeSinceLastDigitChange; 
 	var timeElapsedInSeconds = timeElapsedInMilliseconds/1000;
-	if (timeElapsedInSeconds > 5 && m >= 0.8){
+	if (timeElapsedInSeconds > 5 && digitsInARow >= 200 && m>= 0.5){
 		return true; 
 	}
 	else{
