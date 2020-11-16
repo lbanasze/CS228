@@ -1,3 +1,4 @@
+
 var controllerOptions = {};
 var trainingCompleted = false;
 var features;
@@ -6,7 +7,7 @@ var oneFrameOfData = nj.zeros([5,4,6]);
 var n = 0;
 var m = 1;
 var programState = 0;
-var digitToShow = 2;
+var digitToShow = 0;
 var timeSinceLastDigitChange = new Date(); 
 
 const knnClassifier = ml5.KNNClassifier();
@@ -347,11 +348,35 @@ function DrawImage(){
 }
 
 function DrawLowerRightPanel(){
-	if (digitToShow == 2){
+	if (digitToShow == 0){
+		image(img0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 1){
+		image(img1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 2){
 		image(img2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 	}
-	else{
+	else if (digitToShow == 3){
 		image(img3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 4){
+		image(img4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 5){
+		image(img5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 6){
+		image(img6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 7){
+		image(img7, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 8){
+		image(img8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 9){
+		image(img8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 	}
 }
 
@@ -479,11 +504,32 @@ function HandleState1(frame){
 }
 
 function SwitchDigits(){
+	if (digitToShow == 0){
+		digitToShow = 1;
+	}
+	if else (digitToShow == 1){
+		digitToShow = 2;
+	}
 	if (digitToShow == 2){
 		digitToShow = 3;
 	}
-	else{
-		digitToShow = 2;
+	if else (digitToShow == 3){
+		digitToShow = 4;
+	}
+	if (digitToShow == 4){
+		digitToShow = 5;
+	}
+	if else (digitToShow == 5){
+		digitToShow = 6;
+	}
+	if (digitToShow == 6){
+		digitToShow = 7;
+	}
+	if else (digitToShow == 7){
+		digitToShow = 8;
+	}
+	if (digitToShow == 8){
+		digitToShow = 9;
 	}
 	timeSinceLastDigitChange = new Date();
 	n = 0; 
