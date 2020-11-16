@@ -1,4 +1,3 @@
-
 var controllerOptions = {};
 var trainingCompleted = false;
 var features;
@@ -385,43 +384,39 @@ function DrawLowerRightPanel(){
 			image(img8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 		}
 		else if (digitToShow == 9){
-			image(img8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			image(img9, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 		}
 	}
 	else{
 		if (digitToShow == 0){
-			image(img0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-			let c = get(0, 0, width/2, height);
-			clear();
-			image(c, 0, 0);
-			
+			image(num0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);	
 		}
 		else if (digitToShow == 1){
-			image(img1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			image(num1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 		}	
 		else if (digitToShow == 2){
-			image(img2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			image(num2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 		}
 		else if (digitToShow == 3){
-			image(img3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			image(num3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 		}
 		else if (digitToShow == 4){
-			image(img4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			image(num4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 		}
 		else if (digitToShow == 5){
-			image(img5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			image(num5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 		}
 		else if (digitToShow == 6){
-			image(img6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			image(num6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 		}
 		else if (digitToShow == 7){
-			image(img7, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			image(num7, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 		}
 		else if (digitToShow == 8){
-			image(img8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			image(num8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 		}
 		else if (digitToShow == 9){
-			image(img8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			image(num9, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 		}
 
 	}
