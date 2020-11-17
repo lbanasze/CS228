@@ -5,6 +5,7 @@ var predictedLabel;
 var oneFrameOfData = nj.zeros([5,4,6]);
 var n = 0;
 var m = 1;
+var mTotal = 0;
 var digitsInARow = 0;
 var lastDigit;
 var programState = 0;
@@ -574,6 +575,7 @@ function SwitchDigits(){
 	else if(digitToShow == 8){
 		digitToShow = 9;
 	}
+	mTotal += m;
 	timeSinceLastDigitChange = new Date();
 	n = 0; 
 	digitsInARow = 0; 
@@ -583,7 +585,8 @@ function TimeToSwitchDigits(){
 	var currentTime = new Date(); 
 	var timeElapsedInMilliseconds = currentTime - timeSinceLastDigitChange; 
 	var timeElapsedInSeconds = timeElapsedInMilliseconds/1000;
-	if (timeElapsedInSeconds > 5 && digitsInARow >= 200 && m>= 0.5){
+	var max = 10 - (5*(mTotal/(digitToShow+1)));
+	if (timeElapsedInSeconds > max){
 		return true; 
 	}
 	else{
