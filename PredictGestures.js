@@ -3,6 +3,16 @@ var trainingCompleted = false;
 var features;
 var predictedLabel;
 var oneFrameOfData = nj.zeros([5,4,6]);
+var dataSet; 
+var captured = false;
+var display;
+var zeroFrame = nj.zeros([5, 4, 6]);
+var oneFrame = nj.zeros([5, 4, 6]);
+var twoFrame = nj.zeros([5, 4, 6]);
+var threeFrame = nj.zeros([5, 4, 6]);
+var fourFrame = nj.zeros([5, 4, 6]);
+var fiveFrame = nj.zeros([5, 4, 6]);
+var c = -1;
 var n = 0;
 var m = 1;
 var mTotal = 0;
@@ -68,13 +78,54 @@ function HandleFrame(frame){
 	if(frame.hands.length >= 1)
         	{
 			hand = frame.hands[0];
-			HandleHand(hand, InteractionBox);
+			HandleHand(hand, InteractionBox, oneFrameOfData, false, false);
+			if (digitToShow == c && !captured){
+				console.log("stepped into");
+				if(digitToShow == 0){
+					HandleHand(hand, InteractionBox, zeroFrame, true, true);
+				}
+				else if(digitToShow == 1){
+					HandleHand(hand, InteractionBox, oneFrame, true, true);
+				}
+				else if(digitToShow == 2){
+					HandleHand(hand, InteractionBox, twoFrame, true, true);
+				}
+				else if(digitToShow == 3){
+					HandleHand(hand, InteractionBox, threeFrame, true, true);
+				}
+				else if(digitToShow == 4){
+					HandleHand(hand, InteractionBox, fourFrame, true, true);
+				}
+				else if(digitToShow == 5){
+					HandleHand(hand, InteractionBox, fiveFrame, true, true);
+				}
+				captured = true;
+			}
+			
+			if(digitToShow == 0){
+				HandleHand(hand, InteractionBox, zeroFrame, true, false);
+			}
+			if(digitToShow == 1){
+				HandleHand(hand, InteractionBox, oneFrame, true, false);
+			}
+			if(digitToShow == 2){
+				HandleHand(hand, InteractionBox, twoFrame, true, false);
+			}
+			if(digitToShow == 3){
+				HandleHand(hand, InteractionBox, threeFrame, true, false);
+			}
+			if(digitToShow == 4){
+				HandleHand(hand, InteractionBox, fourFrame, true, false);
+			}
+			if(digitToShow == 5){
+				HandleHand(hand, InteractionBox, fiveFrame, true, false);
+				}
                 }
 
 }
 
-function CenterXData(){
-	var xValues = oneFrameOfData.slice([], [], [0,6,3]);
+function CenterXData(dataSet){
+	var xValues = dataSet.slice([], [], [0,6,3]);
 	var currentMean = xValues.mean();
 	var horizontalShift = 0.5 - currentMean;
 
@@ -82,12 +133,12 @@ function CenterXData(){
 	var shiftedX;
 	for(i = 0; i < 5; i++){
 		for(j = 0; j < 4; j++){
-			currentX = oneFrameOfData.get(i, j, 0);
+			currentX = dataSet.get(i, j, 0);
 			shiftedX = currentX + horizontalShift;
 			oneFrameOfData.set(i, j, 0, shiftedX);
-			currentX = oneFrameOfData.get(i, j, 1);
+			currentX = dataSet.get(i, j, 1);
 			shiftedX = currentX + horizontalShift;
-			oneFrameOfData.set(i, j, 3, shiftedX);
+			dataSet.set(i, j, 3, shiftedX);
 		}
 	}
 
@@ -95,29 +146,29 @@ function CenterXData(){
 	currentMean = xValues.mean();
 }
 
-function CenterYData(){
-	var yValues = oneFrameOfData.slice([], [], [1,6,3]);
+function CenterYData(dataSet){
+	var yValues = dataSet.slice([], [], [1,6,3]);
 	var currentMean = yValues.mean();
 	var horizontalShift = 0.5 - currentMean;
 	var currentY;
 	var shiftedY;
 	for(i = 0; i < 5; i++){
 		for(j = 0; j < 4; j++){
-			currentY = oneFrameOfData.get(i, j, 1);
+			currentY = dataSet.get(i, j, 1);
 			shiftedY = currentY + horizontalShift;
-			oneFrameOfData.set(i, j, 1, shiftedY);
+			dataSet.set(i, j, 1, shiftedY);
 			
-			currentY = oneFrameOfData.get(i, j, 4);
+			currentY = dataSet.get(i, j, 4);
 			shiftedY = currentY + horizontalShift;
-			oneFrameOfData.set(i, j, 4, shiftedY);
+			dataSet.set(i, j, 4, shiftedY);
 		}
 	}
 
 	currentMean = yValues.mean();
 }
 
-function CenterZData(){
-	var zValues = oneFrameOfData.slice([], [], [2,6,3]);
+function CenterZData(dataSet){
+	var zValues = dataSet.slice([], [], [2,6,3]);
 	var currentMean = zValues.mean();
 	var horizontalShift = 0.5 - currentMean;
 
@@ -125,63 +176,77 @@ function CenterZData(){
 	var shiftedZ;
 	for(i = 0; i < 5; i++){
 		for(j = 0; j < 4; j++){
-			currentZ = oneFrameOfData.get(i, j, 2);
+			currentZ = dataSet.get(i, j, 2);
 			shiftedZ = currentZ + horizontalShift;
-			oneFrameOfData.set(i, j, 2, shiftedZ);
+			dataSet.set(i, j, 2, shiftedZ);
 			
-			currentZ = oneFrameOfData.get(i, j, 5);
+			currentZ = dataSet.get(i, j, 5);
 			shiftedZ = currentZ + horizontalShift;
-			oneFrameOfData.set(i, j, 5, shiftedZ);
+			dataSet.set(i, j, 5, shiftedZ);
 		}
 	}
 
 	currentMean = zValues.mean();
 }
 
-function HandleHand(hand, InteractionBox)
+function HandleHand(hand, InteractionBox, dataSet, rightPanel, captureNeeded)
 {
 	fingers = hand.fingers;
 
       	for (i = 3; i >= 0;  i--) {
 		for (j = 0; j < fingers.length; j++){
 			if(!(fingers[j].type == 0 && i ==3)){
-				HandleBone(fingers[j].bones[i], fingers[j].type, InteractionBox);
+				HandleBone(fingers[j].bones[i], fingers[j].type, InteractionBox, dataSet, rightPanel, captureNeeded);
 			}
 		}
     	}
 }
 
-function HandleFinger(finger){	
-	bones = finger.bones;
-	bones.forEach(HandleBone(bone, finger.type, InteractionBox));
-}
-
-function HandleBone(bone, fingerIndex, InteractionBox){
+function HandleBone(bone, fingerIndex, InteractionBox, dataSet, rightPanel, captureNeeded){
 	normalizedPrevJoint = InteractionBox.normalizePoint(bone.prevJoint, true);
 	normalizedNextJoint = InteractionBox.normalizePoint(bone.nextJoint, true);
 
-	oneFrameOfData.set(fingerIndex, bone.type, 0, normalizedPrevJoint[0]);
-	oneFrameOfData.set(fingerIndex, bone.type, 1, normalizedPrevJoint[1]);
-	oneFrameOfData.set(fingerIndex, bone.type, 2, normalizedPrevJoint[2]);
-	oneFrameOfData.set(fingerIndex, bone.type, 3, normalizedNextJoint[0]);
-	oneFrameOfData.set(fingerIndex, bone.type, 4, normalizedNextJoint[1]);
-	oneFrameOfData.set(fingerIndex, bone.type, 5, normalizedNextJoint[2]);
-
-	x1 = window.innerWidth/2 * normalizedPrevJoint[0];
-	x2 = window.innerWidth/2 * normalizedNextJoint[0];
-	y1 = window.innerHeight/2 * (1 - normalizedPrevJoint[1]);
-	y2 = window.innerHeight/2 * (1 - normalizedNextJoint[1]);
-	z1 = normalizedPrevJoint[2];
-	z2 = normalizedNextJoint[2];
-
-
-	strokeWeight(30 - (bone.type * 4.5));
+	if((rightPanel && captureNeeded) || !rightPanel){
+		dataSet.set(fingerIndex, bone.type, 0, normalizedPrevJoint[0]);
+		dataSet.set(fingerIndex, bone.type, 1, normalizedPrevJoint[1]);
+		dataSet.set(fingerIndex, bone.type, 2, normalizedPrevJoint[2]);
+		dataSet.set(fingerIndex, bone.type, 3, normalizedNextJoint[0]);
+		dataSet.set(fingerIndex, bone.type, 4, normalizedNextJoint[1]);
+		dataSet.set(fingerIndex, bone.type, 5, normalizedNextJoint[2]);
+	}
 	
-	stroke((255 - (bone.type + 1.5) * 40), (255 - (bone.type + 1.5) * 40), (255 - (bone.type + 1.5) * 40), (200 + (10 * (1+bone.type)))); 
 
-	line(x1, y1, x2, y2);
+	if(!rightPanel){
+		x1 = window.innerWidth/2 * normalizedPrevJoint[0];
+		x2 = window.innerWidth/2 * normalizedNextJoint[0];
+		y1 = window.innerHeight/2 * (1 - normalizedPrevJoint[1]);
+		y2 = window.innerHeight/2 * (1 - normalizedNextJoint[1]);
+		z1 = normalizedPrevJoint[2];
+		z2 = normalizedNextJoint[2];
+
+		strokeWeight(30 - (bone.type * 4.5));
+	
+		stroke((255 - (bone.type + 1.5) * 40), (255 - (bone.type + 1.5) * 40), (255 - (bone.type + 1.5) * 40), (200 + (10 * (1+bone.type)))); 
+
+		line(x1, y1, x2, y2);
+	}
 }
 
+function DrawPrevious(dataSet){
+	for(i = 0; i < dataSet.shape[0]; i++){
+		for(j = dataSet.shape[1]; j >= 0; j--){
+				x1 = window.innerWidth/2 * dataSet.get(i, j, 0);
+				y1 = window.innerHeight/2 * (1- dataSet.get(i, j, 1))+ window.innerHeight/1.9;
+				x2 = window.innerWidth/2 * dataSet.get(i, j, 3);
+				y2 = window.innerHeight/2 *(1- dataSet.get(i, j, 4)) + window.innerHeight/1.9;
+			
+				strokeWeight(25 - (j*4.5));
+				stroke(0, 255 - (j + 1.5) * 40, 0, (200+10*(1+j))); 
+				line(x1, y1, x2, y2);
+			}
+		}
+
+}
 // TRAIN FUNCTION
 function Train(){
 	for (i = 0; i < train2.shape[3]; i ++){
@@ -304,9 +369,9 @@ function TrainKnn(){
 function Test(){
 	for(i = 0; i < oneFrameOfData.shape[2]; i++){	
 		var currentSample = oneFrameOfData.pick(null, null, null, i);
-		CenterXData();
-		CenterYData();
-		CenterZData();
+		CenterXData(oneFrameOfData);
+		CenterYData(oneFrameOfData);
+		CenterZData(oneFrameOfData);
 		currentSample = currentSample.reshape(1,120);
 		predictedLabel = knnClassifier.classify(currentSample.tolist(), GotResults);
 	}
@@ -355,7 +420,26 @@ function DrawImage(){
 	image(img, 0, 0, window.innerWidth/2, window.innerHeight/2);
 }
 
-function DrawLowerRightPanel(){
+function DrawLowerLeftPanel(){
+	if (digitToShow == 1){
+		DrawPrevious(zeroFrame);
+	}	
+	else if (digitToShow == 2){
+		DrawPrevious(oneFrame);	
+	}
+	else if (digitToShow == 3){
+		DrawPrevious(twoFrame);	
+	}
+	else if (digitToShow == 4){
+		DrawPrevious(threeFrame);	
+	}
+	else if (digitToShow == 5){
+		DrawPrevious(fourFrame);	
+	}
+}
+
+function DrawLowerRightPanel(dataSet){
+	display = false; 
 	if(digitsInARow < 50){
 		if (digitToShow == 0){
 			image(img0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
@@ -388,8 +472,9 @@ function DrawLowerRightPanel(){
 			image(img9, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 		}
 	}
-	else{
+	else if(!captured){
 		if (digitToShow == 0){
+			
 			image(num0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);	
 		}
 		else if (digitToShow == 1){
@@ -421,7 +506,6 @@ function DrawLowerRightPanel(){
 		}
 
 	}
-
 }
 
 function HandTooFarLeft(){
@@ -579,6 +663,7 @@ function SwitchDigits(){
 	timeSinceLastDigitChange = new Date();
 	n = 0; 
 	digitsInARow = 0; 
+	captured = false; 
 }
 
 function TimeToSwitchDigits(){
@@ -602,7 +687,25 @@ function DetermineWhetherToSwitchDigits(){
 
 function HandleState2(frame){
 	DetermineWhetherToSwitchDigits();
-	DrawLowerRightPanel();
+	if(digitToShow == 0){
+		DrawLowerRightPanel(zeroFrame);
+	}
+	else if(digitToShow == 1){
+		DrawLowerRightPanel(oneFrame);
+	}
+	if(digitToShow == 2){
+		DrawLowerRightPanel(twoFrame);
+	}
+	if(digitToShow == 3){
+		DrawLowerRightPanel(threeFrame);
+	}
+	if(digitToShow == 4){
+		DrawLowerRightPanel(fourFrame);
+	}
+	if(digitToShow == 5){
+		DrawLowerRightPanel(fiveFrame);
+	}
+	DrawLowerLeftPanel();
 	HandleFrame(frame);
 }
 
