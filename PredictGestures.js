@@ -12,6 +12,10 @@ var twoFrame = nj.zeros([5, 4, 6]);
 var threeFrame = nj.zeros([5, 4, 6]);
 var fourFrame = nj.zeros([5, 4, 6]);
 var fiveFrame = nj.zeros([5, 4, 6]);
+var sixFrame = nj.zeros([5, 4, 6]);
+var sevenFrame = nj.zeros([5, 4, 6]);
+var eightFrame = nj.zeros([5, 4, 6]);
+var nineFrame = nj.zeros([5, 4, 6]);
 var c = -1;
 var n = 0;
 var m = 1;
@@ -98,6 +102,18 @@ function HandleFrame(frame){
 				}
 				else if(digitToShow == 5){
 					HandleHand(hand, InteractionBox, fiveFrame, true, true);
+				}
+				else if(digitToShow == 6){
+					HandleHand(hand, InteractionBox, sixFrame, true, true);
+				}
+				else if(digitToShow == 7){
+					HandleHand(hand, InteractionBox, sevenFrame, true, true);
+				}
+				else if(digitToShow == 8){
+					HandleHand(hand, InteractionBox, eightFrame, true, true);
+				}
+				else if(digitToShow == 9){
+					HandleHand(hand, InteractionBox, nineFrame, true, true);
 				}
 				captured = true;
 			}
@@ -235,12 +251,14 @@ function HandleBone(bone, fingerIndex, InteractionBox, dataSet, rightPanel, capt
 function DrawPrevious(dataSet){
 	for(i = 0; i < dataSet.shape[0]; i++){
 		for(j = dataSet.shape[1]; j >= 0; j--){
-				x1 = window.innerWidth/2 * dataSet.get(i, j, 0);
-				y1 = window.innerHeight/2 * (1- dataSet.get(i, j, 1))+ window.innerHeight/1.9;
-				x2 = window.innerWidth/2 * dataSet.get(i, j, 3);
-				y2 = window.innerHeight/2 *(1- dataSet.get(i, j, 4)) + window.innerHeight/1.9;
+				x1 = window.innerWidth/8 * dataSet.get(i, j, 0);
+				y1 = window.innerHeight/8 * (1- dataSet.get(i, j, 1));
+				x2 = window.innerWidth/8 * dataSet.get(i, j, 3);
+				y2 = window.innerHeight/8 *(1- dataSet.get(i, j, 4));
 			
-				strokeWeight(25 - (j*4.5));
+
+				console.log(x1, y1, x2, y2);
+				strokeWeight(10 - (j*1.5));
 				stroke(0, 255 - (j + 1.5) * 40, 0, (200+10*(1+j))); 
 				line(x1, y1, x2, y2);
 			}
@@ -435,6 +453,18 @@ function DrawLowerLeftPanel(){
 	}
 	else if (digitToShow == 5){
 		DrawPrevious(fourFrame);	
+	}
+	else if (digitToShow == 6){
+		DrawPrevious(fiveFrame);
+	}	
+	else if (digitToShow == 7){
+		DrawPrevious(sixFrame);	
+	}
+	else if (digitToShow == 8){
+		DrawPrevious(sevenFrame);	
+	}
+	else if (digitToShow == 9){
+		DrawPrevious(eightFrame);	
 	}
 }
 
@@ -728,7 +758,14 @@ Leap.loop(controllerOptions, function(frame){
 		Test();
 		strokeWeight(5);
 		stroke(255-255*(m), 255*(m), 0);
-		rect(0, 0, window.innerWidth/2, window.innerHeight/2);
+		rect(0, 0, window.innerWidth/1.75, window.innerHeight/1.75);
+
+		if(digitToShow > 0){
+			strokeWeight(2.5);
+			stroke(0, 0, 0);
+			rect(0, 0, window.innerWidth/7.9, window.innerHeight/7.9);
+		}
+
 		HandleState2(frame);
 	}
 
