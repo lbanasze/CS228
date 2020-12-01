@@ -698,7 +698,7 @@ function SwitchDigits(){
 		digitToShow = 9;
 	}
 	mTotal += m;
-	DrawGraphs();
+//	DrawGraphs();
 	timeSinceLastDigitChange = new Date();
 	n = 0; 
 	digitsInARow = 0; 
