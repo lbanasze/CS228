@@ -698,7 +698,7 @@ function SwitchDigits(){
 		digitToShow = 9;
 	}
 	mTotal += m;
-//	DrawGraphs();
+	DrawGraphs();
 	timeSinceLastDigitChange = new Date();
 	n = 0; 
 	digitsInARow = 0; 
@@ -745,6 +745,10 @@ function DrawGraphs(){
 		},
 		axisX: {
 		    interval: 10,
+		},
+		axisY: {
+			minimum: 0,
+			maximum: 1
 		},
 		data: [
 		{
@@ -795,6 +799,10 @@ function DrawGraphs(){
 		},
 		axisX: {
 		    interval: 1,
+		},
+		axisY: {
+			minimum: 0,
+			maximum: 1
 		},
 		data: [
 		{
