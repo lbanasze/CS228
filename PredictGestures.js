@@ -26,6 +26,7 @@ var programState = 0;
 var digitToShow = 0;
 var timeSinceLastDigitChange = new Date();
 var username;
+var displayPrev = false; 
 
 const knnClassifier = ml5.KNNClassifier();
 
@@ -260,9 +261,16 @@ function DrawPrevious(dataSet){
 
 				strokeWeight(10 - (j*1.5));
 				stroke(0, 255 - (j + 1.5) * 40, 0, (200+10*(1+j))); 
-				line(x1, y1, x2, y2);
-			}
+				
+				if(x1 > 0 && x2 > 0){
+					displayPrev = true; 
+					line(x1, y1, x2, y2);
+				}
+				else{
+					displayPrev = false; 
+				}
 		}
+	}
 
 }
 // TRAIN FUNCTION
@@ -690,13 +698,14 @@ function SwitchDigits(){
 		digitToShow = 9;
 	}
 	mTotal += m;
+	DrawGraphs();
 	timeSinceLastDigitChange = new Date();
 	n = 0; 
 	digitsInARow = 0; 
 	captured = false; 
 }
 
-function TimeToSwacitchDigits(){
+function TimeToSwitchDigits(){
 	var currentTime = new Date(); 
 	var timeElapsedInMilliseconds = currentTime - timeSinceLastDigitChange; 
 	var timeElapsedInSeconds = timeElapsedInMilliseconds/1000;
@@ -716,6 +725,7 @@ function DetermineWhetherToSwitchDigits(){
 }
 
 function DrawGraphs(){
+	/*
 	var usersList = document.getElementById("users");
 	var users = usersList.children;
 	var usersData = []; 
@@ -724,25 +734,29 @@ function DrawGraphs(){
 		usersData.push(users[i].innerHTML);
 		sessionsData.push(users[i+2].innerHTML);
 	}
-
-	var usersGraph = {
+*/
+	var accuracy = mTotal / (digitToShow + 1);
+	var usersGraph = new CanvasJS.Chart("barGraphContainer",  {
 		type: 'bar',
 		data: {
-			labels: usersData,
+			labels: ["Laura", "Laura1", "Laura2"],
 			datasets: [
 				{
 					label: "Average Accuracy",
-					data: sessionsData,
+					data: [accuracy, 0.7, 0.6],
 					borderWidth: 1
 				},
 			]
 		},
 
 		options :{
+			responsive: false,
+			maintainAspectRatio:false,
 			scales:{
 				yAxes: [{
 					ticks:{
-						reverse: false
+						reverse: false,
+						beginAtZero:true 
 					}
 				}]
 			}
@@ -750,8 +764,11 @@ function DrawGraphs(){
 	}
 
 	var ctx = document.getElementById('barGraphContainer').getContext('2d');
+	ctx.moveTo(0,0);
 	new Chart(ctx, usersGraph);
 	
+	var correct = mTotal / (digitToShow + 1);
+	var incorrect = 1 - correct; 
 	var currentSessionGraph = {
   		type: 'pie',
   		data: {
@@ -768,6 +785,11 @@ function DrawGraphs(){
 			  ],
 			  hoverOffset: 4
 			}]
+		},
+
+		options:{
+			responsive: false,
+			maintainAspectRatio:false,
 		}
 	}
 
@@ -806,7 +828,6 @@ Leap.loop(controllerOptions, function(frame){
 	clear();
 
 	TrainKnn();
-	DrawGraphs();
 	DetermineState(frame);
 	if (programState == 0){
 		HandleState0(frame);
@@ -822,9 +843,15 @@ Leap.loop(controllerOptions, function(frame){
 		stroke(255-255*(m), 255*(m), 0);
 		rect(0, 0, window.innerWidth/1.75, window.innerHeight/1.75);
 
-		if(digitToShow > 0){
+		if(digitToShow > 0 && displayPrev){
 			strokeWeight(2.5);
 			stroke(0, 0, 0);
+			rect(0, 0, window.innerWidth/7.9, window.innerHeight/7.9);
+		}
+
+		else if(digitToShow > 0){
+			strokeWeight(2.5);
+			stroke(255, 0, 0);
 			rect(0, 0, window.innerWidth/7.9, window.innerHeight/7.9);
 		}
 
