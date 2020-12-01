@@ -25,6 +25,7 @@ var lastDigit;
 var programState = 0;
 var digitToShow = 0;
 var timeSinceLastDigitChange = new Date();
+var username;
 
 const knnClassifier = ml5.KNNClassifier();
 
@@ -257,7 +258,6 @@ function DrawPrevious(dataSet){
 				y2 = window.innerHeight/8 *(1- dataSet.get(i, j, 4));
 			
 
-				console.log(x1, y1, x2, y2);
 				strokeWeight(10 - (j*1.5));
 				stroke(0, 255 - (j + 1.5) * 40, 0, (200+10*(1+j))); 
 				line(x1, y1, x2, y2);
@@ -438,7 +438,7 @@ function DrawImage(){
 	image(img, 0, 0, window.innerWidth/2, window.innerHeight/2);
 }
 
-function DrawLowerLeftPanel(){
+function DrawTopLeftPanel(){
 	if (digitToShow == 1){
 		DrawPrevious(zeroFrame);
 	}	
@@ -696,7 +696,7 @@ function SwitchDigits(){
 	captured = false; 
 }
 
-function TimeToSwitchDigits(){
+function TimeToSwacitchDigits(){
 	var currentTime = new Date(); 
 	var timeElapsedInMilliseconds = currentTime - timeSinceLastDigitChange; 
 	var timeElapsedInSeconds = timeElapsedInMilliseconds/1000;
@@ -713,6 +713,45 @@ function DetermineWhetherToSwitchDigits(){
 	if(TimeToSwitchDigits()){
 		SwitchDigits();
 	}
+}
+
+function DrawGraphs(){
+	var usersList = document.getElementById("users");
+	var users = usersList.children;
+	var usersData = []; 
+	var sessionsData = []; 
+	for(let i = 0; i < users.length - 2; i+=3){
+		usersData.push(users[i].innerHTML);
+		sessionsData.push(users[i+2].innerHTML);
+	}
+
+	var usersGraph = {
+		type: 'bar',
+		data: {
+			labels: usersData,
+			datasets: [
+				{
+					label: "Average Accuracy",
+					data: sessionsData,
+					borderWidth: 1
+				},
+			]
+		},
+
+		options :{
+			scales:{
+				yAxes: [{
+					ticks:{
+						reverse: false
+					}
+				}]
+			}
+		}
+	}
+
+	var ctx = document.getElementById('barGraphContainer').getContext('2d');
+	new Chart(ctx, usersGraph);
+
 }
 
 function HandleState2(frame){
@@ -735,7 +774,7 @@ function HandleState2(frame){
 	if(digitToShow == 5){
 		DrawLowerRightPanel(fiveFrame);
 	}
-	DrawLowerLeftPanel();
+	DrawTopLeftPanel();
 	HandleFrame(frame);
 }
 
@@ -745,6 +784,7 @@ Leap.loop(controllerOptions, function(frame){
 	clear();
 
 	TrainKnn();
+	DrawGraphs();
 	DetermineState(frame);
 	if (programState == 0){
 		HandleState0(frame);
