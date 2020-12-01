@@ -736,65 +736,82 @@ function DrawGraphs(){
 	}
 */
 	var accuracy = mTotal / (digitToShow + 1);
-	var usersGraph = new CanvasJS.Chart("barGraphContainer",  {
-		type: 'bar',
-		data: {
-			labels: ["Laura", "Laura1", "Laura2"],
-			datasets: [
-				{
-					label: "Average Accuracy",
-					data: [accuracy, 0.7, 0.6],
-					borderWidth: 1
-				},
-			]
-		},
-
-		options :{
-			responsive: false,
-			maintainAspectRatio:false,
-			scales:{
-				yAxes: [{
-					ticks:{
-						reverse: false,
-						beginAtZero:true 
-					}
-				}]
-			}
-		}
-	}
-
-	var ctx = document.getElementById('barGraphContainer').getContext('2d');
-	ctx.moveTo(0,0);
-	new Chart(ctx, usersGraph);
 	
+	var chart = new CanvasJS.Chart("chartContainer1",
+	    {
+		animationEnabled: true,
+		title: {
+		    text: "Accuracies of All Users"
+		},
+		axisX: {
+		    interval: 10,
+		},
+		data: [
+		{
+		    type: "column",
+		    legendMarkerType: "triangle",
+		    legendMarkerColor: "green",
+		    color: "rgba(0,255,50,.3)",
+		    showInLegend: true,
+		    legendText: "Average Accuracy",
+		    dataPoints: [
+			{ x: 10, y: accuracy, label: "Laura" },
+			{ x: 20, y: 0.6, label: "Laura1" },
+			{ x: 30, y: 0.7, label: "Laura2" },
+
+		    ]
+		},
+		]
+	    });
+	chart.render();
+
 	var correct = mTotal / (digitToShow + 1);
 	var incorrect = 1 - correct; 
-	var currentSessionGraph = {
-  		type: 'pie',
-  		data: {
-			labels: [
-			  'Incorrect',
-			  'Correct',
-			],
-			datasets: [{
-			  label: 'Sessions',
-			  data: [correct, incorrect],
-			  backgroundColor: [
-			    'rgb(190, 13, 0)',
-			    'rgb(34,139,34)',
-			  ],
-			  hoverOffset: 4
-			}]
+
+	var chart = new CanvasJS.Chart("chartContainer2",
+	    {
+		animationEnabled: true,
+		title: {
+		    text: "Current Session",
 		},
+		data: [
+		{
+		    type: "pie",
+		    showInLegend: true,
+		    dataPoints: [
+			{ y: correct, legendText: "Correct", color:"green" },
+			{ y: incorrect, legendText: "Incorrect", color: "red"},        
+		    ]
+		},
+		]
+	    });
+	chart.render();
 
-		options:{
-			responsive: false,
-			maintainAspectRatio:false,
-		}
-	}
+	var chart = new CanvasJS.Chart("chartContainer3",
+	    {
+		animationEnabled: true,
+		title: {
+		    text: "Accuracy By Session"
+		},
+		axisX: {
+		    interval: 1,
+		},
+		data: [
+		{
+		    type: "splineArea",
+		    color: "rgba(0,255,0,.3)",
+		    type: "splineArea",
+		    dataPoints: [
+			{ x: 1, y: 0.5},
+			{ x: 2, y: 0.8 },
+			{ x: 3, y: accuracy}
 
-	var ctx2 = document.getElementById('pieGraphContainer').getContext('2d');
-	new Chart(ctx2, currentSessionGraph);
+		    ]
+		},
+		]
+	    });
+	chart.render();
+
 
 }
 
