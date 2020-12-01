@@ -751,6 +751,28 @@ function DrawGraphs(){
 
 	var ctx = document.getElementById('barGraphContainer').getContext('2d');
 	new Chart(ctx, usersGraph);
+	
+	var currentSessionGraph = {
+  		type: 'pie',
+  		data: {
+			labels: [
+			  'Incorrect',
+			  'Correct',
+			],
+			datasets: [{
+			  label: 'Sessions',
+			  data: [correct, incorrect],
+			  backgroundColor: [
+			    'rgb(190, 13, 0)',
+			    'rgb(34,139,34)',
+			  ],
+			  hoverOffset: 4
+			}]
+		}
+	}
+
+	var ctx2 = document.getElementById('pieGraphContainer').getContext('2d');
+	new Chart(ctx2, currentSessionGraph);
 
 }
 
