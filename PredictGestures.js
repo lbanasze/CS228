@@ -4,7 +4,8 @@ var controllerOptions = {};
 var username;
 var display;
 var chart1, chart2, chart3;
-
+var previousState;
+var created;
 // FRAMES
 var zeroFrame = nj.zeros([5, 4, 6]);
 var oneFrame = nj.zeros([5, 4, 6]);
@@ -644,9 +645,8 @@ function HandIsUncentered(){
 	return false;
 }
 
-function 
-DetermineState(frame){
-	var previousState = programState;
+function DetermineState(frame){
+	previousState = programState;
 
 	if(frame.hands.length == 0){
 		programState = 0;
@@ -681,7 +681,8 @@ DetermineState(frame){
 
 // HANDLE STATES
 function HandleState0(frame){
-	DrawImage();
+		//DrawUserSigns();
+		DrawImage();
 }
 
 function HandleState1(frame){
@@ -884,7 +885,11 @@ function DrawUserSigns(){
 }
 
 function DrawLargeGraph(){
+	
+//	image(imgChart, 0, window.innerHeight/3, window.innerWidth/2, window.innerHeight/3);
+
 	var accuracy = mTotal / (digitToShow + 1);
+	//chart3.reset();
 	chart3  = new CanvasJS.Chart("largeContainer1",
 	    {
 		animationEnabled: true,
@@ -903,11 +908,11 @@ function DrawLargeGraph(){
 		    type: "column",
 		    legendMarkerType: "triangle",
 		    legendMarkerColor: "green",
-		    color: "rgb(0,255,50)",
+		    color: "rgba(0,255,50, 0.3)",
 		    showInLegend: true,
 		    legendText: "Average Accuracy",
 		    dataPoints: [
-			{ x: 10, y: 0.25, label: "Laura" },
+			{ x: 10, y: 0.45, label: "Laura" },
 			{ x: 20, y: 0.6, label: "Laura1" },
 			{ x: 30, y: 0.7, label: "Laura2" },
 
