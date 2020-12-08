@@ -21,6 +21,7 @@ function setup(){
 	img7 = loadImage('https://i.imgur.com/L733mpP.jpg');
 	img8 = loadImage('https://i.imgur.com/YLdigYp.jpg');
 	img9 = loadImage('https://i.imgur.com/mLnKogC.jpg');
+	imgAll = loadImage('https://i.imgur.com/drFEVqD.png');
 	num0 = loadImage('https://i.imgur.com/BMit0e1.png');
 	num1 = loadImage('https://i.imgur.com/AUhoTs8.png');
 	num2 = loadImage('https://i.imgur.com/SMCROf2.png');

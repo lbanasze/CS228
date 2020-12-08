@@ -1,11 +1,10 @@
 var controllerOptions = {};
-var trainingCompleted = false;
-var features;
-var predictedLabel;
-var oneFrameOfData = nj.zeros([5,4,6]);
-var dataSet; 
-var captured = false;
+
+// DISPLAY
+var username;
 var display;
+
+// FRAMES
 var zeroFrame = nj.zeros([5, 4, 6]);
 var oneFrame = nj.zeros([5, 4, 6]);
 var twoFrame = nj.zeros([5, 4, 6]);
@@ -16,19 +15,27 @@ var sixFrame = nj.zeros([5, 4, 6]);
 var sevenFrame = nj.zeros([5, 4, 6]);
 var eightFrame = nj.zeros([5, 4, 6]);
 var nineFrame = nj.zeros([5, 4, 6]);
+var oneFrameOfData = nj.zeros([5,4,6]);
+var dataSet; 
+
+// MACHINE LEARNING VARIABLES
 var c = -1;
 var n = 0;
 var m = 1;
 var mTotal = 0;
+const knnClassifier = ml5.KNNClassifier();
+var predictedLabel;
+var trainingCompleted = false;
+var features;
+
+// DIGIT TRACKING
 var digitsInARow = 0;
 var lastDigit;
 var programState = 0;
 var digitToShow = 0;
 var timeSinceLastDigitChange = new Date();
-var username;
 var displayPrev = false; 
-
-const knnClassifier = ml5.KNNClassifier();
+var captured = false;
 
 // SIGN IN FUNCTIONS
 function IsNewUser(username, list){
@@ -59,7 +66,6 @@ function CreateSignInItem(username, list){
 
 function SignIn(){
 	username = document.getElementById('username').value;
-	console.log(username);
 	var list = document.getElementById('users');
 	if (IsNewUser(username, list)){
 		CreateNewUser(username, list);
@@ -70,7 +76,6 @@ function SignIn(){
 		listItem = document.getElementById(ID);
 		listItem.innerHTML = parseInt(listItem.innerHTML) + 1; 
 	}
-	console.log(list.innerHTML);
 	return false;
 
 }
@@ -86,7 +91,6 @@ function HandleFrame(frame){
 			hand = frame.hands[0];
 			HandleHand(hand, InteractionBox, oneFrameOfData, false, false);
 			if (digitToShow == c && !captured){
-				console.log("stepped into");
 				if(digitToShow == 0){
 					HandleHand(hand, InteractionBox, zeroFrame, true, true);
 				}
@@ -123,13 +127,28 @@ function HandleFrame(frame){
 			if(digitToShow == 0){
 				HandleHand(hand, InteractionBox, zeroFrame, true, false);
 			}
-			if(digitToShow == 1){
+			else if(digitToShow == 1){
 				HandleHand(hand, InteractionBox, oneFrame, true, false);
 			}
-			if(digitToShow == 2){
+			else if(digitToShow == 2){
 				HandleHand(hand, InteractionBox, twoFrame, true, false);
 			}
-			if(digitToShow == 3){
+			else if(digitToShow == 3){
+				HandleHand(hand, InteractionBox, threeFrame, true, false);
+			}
+			else if(digitToShow == 4){
+				HandleHand(hand, InteractionBox, fourFrame, true, false);
+			}
+			else if(digitToShow == 5){
+				HandleHand(hand, InteractionBox, fiveFrame, true, false);
+				}
+			else if(digitToShow == 1){
+				HandleHand(hand, InteractionBox, oneFrame, true, false);
+			}
+			else if(digitToShow == 2){
+				HandleHand(hand, InteractionBox, twoFrame, true, false);
+			}
+			else if(digitToShow == 3){
 				HandleHand(hand, InteractionBox, threeFrame, true, false);
 			}
 			if(digitToShow == 4){
@@ -618,17 +637,22 @@ function HandIsUncentered(){
 	return false;
 }
 
-function DetermineState(frame){
+function 
+DetermineState(frame){
 	if(frame.hands.length == 0){
 		programState = 0;
 	}
 
-	else if(HandIsUncentered()){
+	else if(HandIsUncentered() && frame.hands.length == 1){
 		programState = 1;
 	}
 
+	else if(frame.hands.length == 2){
+		programState = 2;
+	}
+
 	else{
-		programState = 2; 
+		programState = 3; 
 	}
 }
 
@@ -698,7 +722,7 @@ function SwitchDigits(){
 		digitToShow = 9;
 	}
 	mTotal += m;
-	DrawGraphs();
+	DrawGraphs("chartContainer1", "chartContainer2", "chartContainer3");
 	timeSinceLastDigitChange = new Date();
 	n = 0; 
 	digitsInARow = 0; 
@@ -724,7 +748,7 @@ function DetermineWhetherToSwitchDigits(){
 	}
 }
 
-function DrawGraphs(){
+function DrawGraphs(c1, c2, c3){
 	/*
 	var usersList = document.getElementById("users");
 	var users = usersList.children;
@@ -737,7 +761,7 @@ function DrawGraphs(){
 */
 	var accuracy = mTotal / (digitToShow + 1);
 	
-	var chart = new CanvasJS.Chart("chartContainer1",
+	var chart = new CanvasJS.Chart(c1,
 	    {
 		animationEnabled: true,
 		title: {
@@ -772,7 +796,7 @@ function DrawGraphs(){
 	var correct = mTotal / (digitToShow + 1);
 	var incorrect = 1 - correct; 
 
-	var chart = new CanvasJS.Chart("chartContainer2",
+	var chart = new CanvasJS.Chart(c2,
 	    {
 		animationEnabled: true,
 		title: {
@@ -791,7 +815,7 @@ function DrawGraphs(){
 	    });
 	chart.render();
 
-	var chart = new CanvasJS.Chart("chartContainer3",
+	var chart = new CanvasJS.Chart(c3,
 	    {
 		animationEnabled: true,
 		title: {
@@ -831,21 +855,51 @@ function HandleState2(frame){
 	else if(digitToShow == 1){
 		DrawLowerRightPanel(oneFrame);
 	}
-	if(digitToShow == 2){
+	else if(digitToShow == 2){
 		DrawLowerRightPanel(twoFrame);
 	}
-	if(digitToShow == 3){
+	else if(digitToShow == 3){
 		DrawLowerRightPanel(threeFrame);
 	}
-	if(digitToShow == 4){
+	else if(digitToShow == 4){
 		DrawLowerRightPanel(fourFrame);
 	}
-	if(digitToShow == 5){
+	else if(digitToShow == 5){
 		DrawLowerRightPanel(fiveFrame);
 	}
+	else if(digitToShow == 6){
+		DrawLowerRightPanel(sixFrame);
+	}
+	else if(digitToShow == 7){
+		DrawLowerRightPanel(sevenFrame);
+	}
+	else if(digitToShow == 8){
+		DrawLowerRightPanel(eightFrame);
+	}
+	else if(digitToShow == 9){
+		DrawLowerRightPanel(nineFrame);
+	}
+
+	DrawTopLeftPanel();
+	HandleFrame(frame);
+
 	DrawTopLeftPanel();
 	HandleFrame(frame);
 }
+
+function DrawSignImages(){
+	image(imgNums, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+}
+
+function DrawUserSigns(){
+	image(imgAll, 0, 0, window.innerWidth, window.innerHeight/5);
+}
+
+function HandleState3(frame){
+	DrawGraphs("largeContainer1", "largeContainer2", "largeContainer3");
+	DrawUserSigns();
+}
+
 
 // LEAP LOOP
 Leap.loop(controllerOptions, function(frame){
@@ -860,6 +914,10 @@ Leap.loop(controllerOptions, function(frame){
 
 	else if (programState == 1){
 		HandleState1(frame);
+	}
+	
+	else if(programState == 2){
+		HandleState3(frame); 
 	}
 
 	else{
