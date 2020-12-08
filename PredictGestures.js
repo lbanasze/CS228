@@ -3,6 +3,7 @@ var controllerOptions = {};
 // DISPLAY
 var username;
 var display;
+var chart1, chart2, chart3;
 
 // FRAMES
 var zeroFrame = nj.zeros([5, 4, 6]);
@@ -36,6 +37,7 @@ var digitToShow = 0;
 var timeSinceLastDigitChange = new Date();
 var displayPrev = false; 
 var captured = false;
+var correct = [false, false, false, false, false, false, false, false, false, false];
 
 // SIGN IN FUNCTIONS
 function IsNewUser(username, list){
@@ -430,6 +432,7 @@ function GotResults(err, result){
 		digitsInARow = 0;
 	}
 	if (c == digitToShow){
+		correct[digitToShow - 1] = true;
 		digitsInARow += 1; 
 	}
 	console.log(c, m, digitsInARow);
@@ -493,6 +496,10 @@ function DrawTopLeftPanel(){
 	else if (digitToShow == 9){
 		DrawPrevious(eightFrame);	
 	}
+}
+
+function DrawTopRightPanel(){
+	image(imgInfo, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2);
 }
 
 function DrawLowerRightPanel(dataSet){
@@ -639,20 +646,35 @@ function HandIsUncentered(){
 
 function 
 DetermineState(frame){
+	var previousState = programState;
+
 	if(frame.hands.length == 0){
 		programState = 0;
+		if (previousState == 2){
+			chart3.destroy();
+		}
 	}
 
 	else if(HandIsUncentered() && frame.hands.length == 1){
 		programState = 1;
+		if (previousState == 2){
+			chart3.destroy();
+		}
 	}
 
 	else if(frame.hands.length == 2){
 		programState = 2;
+		if (previousState == 3 && digitToShow > 0){
+			chart1.destroy();
+			chart2.destroy();
+		}
 	}
 
 	else{
 		programState = 3; 
+		if (previousState == 2){
+			chart3.destroy();
+		}
 	}
 }
 
@@ -722,7 +744,7 @@ function SwitchDigits(){
 		digitToShow = 9;
 	}
 	mTotal += m;
-	DrawGraphs("chartContainer1", "chartContainer2", "chartContainer3");
+	DrawGraphs("chartContainer1", "chartContainer2");
 	timeSinceLastDigitChange = new Date();
 	n = 0; 
 	digitsInARow = 0; 
@@ -748,7 +770,7 @@ function DetermineWhetherToSwitchDigits(){
 	}
 }
 
-function DrawGraphs(c1, c2, c3){
+function DrawGraphs(c1, c2){
 	/*
 	var usersList = document.getElementById("users");
 	var users = usersList.children;
@@ -761,42 +783,10 @@ function DrawGraphs(c1, c2, c3){
 */
 	var accuracy = mTotal / (digitToShow + 1);
 	
-	var chart = new CanvasJS.Chart(c1,
-	    {
-		animationEnabled: true,
-		title: {
-		    text: "Accuracies of All Users"
-		},
-		axisX: {
-		    interval: 10,
-		},
-		axisY: {
-			minimum: 0,
-			maximum: 1
-		},
-		data: [
-		{
-		    type: "column",
-		    legendMarkerType: "triangle",
-		    legendMarkerColor: "green",
-		    color: "rgba(0,255,50,.3)",
-		    showInLegend: true,
-		    legendText: "Average Accuracy",
-		    dataPoints: [
-			{ x: 10, y: accuracy, label: "Laura" },
-			{ x: 20, y: 0.6, label: "Laura1" },
-			{ x: 30, y: 0.7, label: "Laura2" },
-
-		    ]
-		},
-		]
-	    });
-	chart.render();
-
 	var correct = mTotal / (digitToShow + 1);
 	var incorrect = 1 - correct; 
 
-	var chart = new CanvasJS.Chart(c2,
+	chart1 = new CanvasJS.Chart(c1,
 	    {
 		animationEnabled: true,
 		title: {
@@ -813,9 +803,9 @@ function DrawGraphs(c1, c2, c3){
 		},
 		]
 	    });
-	chart.render();
+	chart1.render();
 
-	var chart = new CanvasJS.Chart(c3,
+	chart2 = new CanvasJS.Chart(c2,
 	    {
 		animationEnabled: true,
 		title: {
@@ -842,7 +832,7 @@ function DrawGraphs(c1, c2, c3){
 		},
 		]
 	    });
-	chart.render();
+	chart2.render();
 
 
 }
@@ -881,9 +871,7 @@ function HandleState2(frame){
 	}
 
 	DrawTopLeftPanel();
-	HandleFrame(frame);
-
-	DrawTopLeftPanel();
+	DrawTopRightPanel();
 	HandleFrame(frame);
 }
 
@@ -895,10 +883,46 @@ function DrawUserSigns(){
 	image(imgAll, 0, 0, window.innerWidth, window.innerHeight/5);
 }
 
+function DrawLargeGraph(){
+	var accuracy = mTotal / (digitToShow + 1);
+	chart3  = new CanvasJS.Chart("largeContainer1",
+	    {
+		animationEnabled: true,
+		title: {
+		    text: "Accuracies of All Users"
+		},
+		axisX: {
+		    interval: 10,
+		},
+		axisY: {
+			minimum: 0,
+			maximum: 1
+		},
+		data: [
+		{
+		    type: "column",
+		    legendMarkerType: "triangle",
+		    legendMarkerColor: "green",
+		    color: "rgb(0,255,50)",
+		    showInLegend: true,
+		    legendText: "Average Accuracy",
+		    dataPoints: [
+			{ x: 10, y: 0.25, label: "Laura" },
+			{ x: 20, y: 0.6, label: "Laura1" },
+			{ x: 30, y: 0.7, label: "Laura2" },
+
+		    ]
+		},
+		]
+	    });
+	chart3.render();
+
+}
 function HandleState3(frame){
-	DrawGraphs("largeContainer1", "largeContainer2", "largeContainer3");
+	DrawLargeGraph();
 	DrawUserSigns();
 }
+
 
 
 // LEAP LOOP
@@ -924,7 +948,7 @@ Leap.loop(controllerOptions, function(frame){
 		Test();
 		strokeWeight(5);
 		stroke(255-255*(m), 255*(m), 0);
-		rect(0, 0, window.innerWidth/1.75, window.innerHeight/1.75);
+		rect(0, 0, window.innerWidth/2, window.innerHeight/2);
 
 		if(digitToShow > 0 && displayPrev){
 			strokeWeight(2.5);
