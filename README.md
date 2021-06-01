@@ -12,3 +12,5 @@ It was completed in week long iterations to add on functionality. The last itera
 - Live graph of accuracy
 - Live feedback
 - Display of previous digit
+
+The final product is viewed through PredictGestures.html. 
